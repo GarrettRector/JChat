@@ -6,9 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-/**
- * Created by jim on 4/21/17.
- */
+
 public class UserListPane extends JPanel implements UserStatusListener {
 
 
