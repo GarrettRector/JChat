@@ -6,9 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-/**
- * Created by jim on 4/24/17.
- */
+
 public class LoginWindow extends JFrame {
     private final ChatClient client;
     JTextField loginField = new JTextField();
