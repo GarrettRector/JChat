@@ -1,14 +1,11 @@
 package com.muc;
 
 import org.apache.commons.lang3.StringUtils;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-/**
- * Created by jim on 4/21/17.
- */
+
 public class ChatClient {
     private final String serverName;
     private final int serverPort;
