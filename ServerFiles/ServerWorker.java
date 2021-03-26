@@ -80,7 +80,7 @@ public class ServerWorker extends Thread {
         }
     }
 
-    private void handleMessage(String[] tokens) throws IOException {
+    private void handleMessage(String[] tokens) {
         String sendTo = tokens[1];
         String body = tokens[2];
 
