@@ -10,9 +10,15 @@ Built on the Java language, it is easy to run and bypasses proxy's and web filte
 
 # Commands
 The valid commands are right now:
+
 `login, Username, Password`
+
 `msg, User Message, Content`
+
 `join, Groupchat name`
+
 `leave, Groupchat name`
+
 `quit, logoff or logout`
+
 Do note that the commas are not part of the commands, they just signify the seperation between terms.
