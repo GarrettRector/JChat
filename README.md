@@ -8,6 +8,10 @@ Built on the Java language, it is easy to run and bypasses proxy's and web filte
 3. All files are also server based. Client side files will be stored as a .exe, but are not avaliable right now.
 4. Look to releases for official JAR files with required libraries. The source is stored for editing for mainly friends who are also working on the project with me
 
+## Required Libraries:
+  1. [Apache Commons CSV Parsing](https://commons.apache.org/proper/commons-csv/download_csv.cgi)
+  2. [Apache Commons String Parsing](https://commons.apache.org/proper/commons-lang/download_lang.cgi)
+
 # Commands
 The valid commands are right now:
 
