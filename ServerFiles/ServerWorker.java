@@ -1,3 +1,4 @@
+
 package com.muc;
 
 import org.apache.commons.lang3.StringUtils;
@@ -120,12 +121,53 @@ public class ServerWorker extends Thread {
         return login;
     }
 
+    public int isEqualLogin(String loginToken) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("login.csv"));
+            String line = "";
+            String unparsedFile = "";
+            Double Price;
+            while ((line = br.readLine()) != null) {
+                String[] Ans = line.split(",");
+                for (String item : Ans){
+                    if(Ans[1].equals(loginToken)){
+                        return 1;
+                    }
+                }
+            }
+            br.close();
+
+        } catch (IOException ex) {
+            System.err.println("Error");
+        }
+        return 0;
+    }
+
+    public int isEqualPassword(String passwordToken) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("login.csv"));
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                String[] Ans = line.split(",");
+                for (String item : Ans){
+                    if(Ans[1].equals(passwordToken)){
+                        return 1;
+                    }
+                }
+            }
+            br.close();
+
+        } catch (IOException ex) {
+            System.err.println("Error");
+        }
+        return 0;
+    }
+
     private void handleLogin(OutputStream outputStream, String[] tokens) throws IOException {
         if (tokens.length == 3) {
             String login = tokens[1];
             String password = tokens[2];
-
-            if ((login.equals("login") && password.equals("password") || (login.equals("guest") && password.equals("guest")) {
+            if ((isEqualLogin(login) == 1) && (isEqualPassword(password) == 1)) {
                 String msg = "Logged In\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
