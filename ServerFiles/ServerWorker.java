@@ -1,4 +1,3 @@
-
 package com.muc;
 
 import org.apache.commons.lang3.StringUtils;
@@ -121,7 +120,7 @@ public class ServerWorker extends Thread {
         return login;
     }
 
-    public int isEqualLogin(String loginToken) {
+    public static int isEqualLogin(String loginToken) {
         try {
             BufferedReader br = new BufferedReader(new FileReader("login.csv"));
             String line = "";
@@ -143,7 +142,7 @@ public class ServerWorker extends Thread {
         return 0;
     }
 
-    public int isEqualPassword(String passwordToken) {
+    public static int isEqualPassword(String passwordToken) {
         try {
             BufferedReader br = new BufferedReader(new FileReader("login.csv"));
             String line = "";
@@ -163,7 +162,7 @@ public class ServerWorker extends Thread {
         return 0;
     }
 
-    private void handleLogin(OutputStream outputStream, String[] tokens) throws IOException {
+    public void handleLogin(OutputStream outputStream, String[] tokens) throws IOException {
         if (tokens.length == 3) {
             String login = tokens[1];
             String password = tokens[2];
@@ -207,5 +206,12 @@ public class ServerWorker extends Thread {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public static int clientLogin(String Login, String Password) {
+        if ((isEqualLogin(Login) == 1) && (isEqualPassword(Password) == 1)) {
+            return 1;
+        }
+        return 0;
     }
 }
