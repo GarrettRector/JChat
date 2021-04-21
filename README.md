@@ -1,6 +1,6 @@
 # JChat
 A simple free messaging client
-Built on the Java language, it is easy to run and bypasses proxy's and web filters.
+Built on the Java language, it is easy to run and bypasses proxy's and web filters. It was mainly created as a communication protocol for me and friends at school where many platforms are blocked, but can be used by anyone
 
 # Points of consideration:
 1. All files for the application are small, everything if not most of the handling is done by the server. More customization is avaliable with the server version
