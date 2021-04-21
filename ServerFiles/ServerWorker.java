@@ -1,10 +1,16 @@
 package com.muc;
 
+import ch.qos.logback.classic.Logger;
 import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 import java.net.Socket;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.net.*;
+import java.util.*;
+import java.text.*;
 
 
 public class ServerWorker extends Thread {
@@ -39,9 +45,8 @@ public class ServerWorker extends Thread {
             String[] tokens = StringUtils.split(line);
             if (tokens != null && tokens.length > 0) {
                 String cmd = tokens[0];
-                if ("logoff".equalsIgnoreCase(cmd) || "quit".equalsIgnoreCase(cmd) || "logout".equalsIgnoreCase(cmd)) {
+                if ("logoff".equals(cmd) || "quit".equalsIgnoreCase(cmd)) {
                     handleLogoff();
-                    System.err.println("Usr: " + login + " Disconnected");
                     break;
                 } else if ("login".equalsIgnoreCase(cmd)) {
                     handleLogin(outputStream, tokens);
@@ -53,7 +58,7 @@ public class ServerWorker extends Thread {
                 } else if ("leave".equalsIgnoreCase(cmd)) {
                     handleLeave(tokens);
                 } else {
-                    String msg = "Incorrect Login" + "\n";
+                    String msg = "unknown cmd '" + cmd + "'\n";
                     outputStream.write(msg.getBytes());
                 }
             }
@@ -80,7 +85,7 @@ public class ServerWorker extends Thread {
         }
     }
 
-    private void handleMessage(String[] tokens) {
+    private void handleMessage(String[] tokens) throws IOException {
         String sendTo = tokens[1];
         String body = tokens[2];
 
@@ -90,7 +95,7 @@ public class ServerWorker extends Thread {
         for (ServerWorker worker : workerList) {
             if (isTopic) {
                 if (worker.isMemberOfTopic(sendTo)) {
-                    String outMsg = login + ": " + body + "\n";
+                    String outMsg = "msg " + sendTo + ":" + login + " " + body + "\n";
                     worker.send(outMsg);
                 }
             } else {
@@ -102,12 +107,12 @@ public class ServerWorker extends Thread {
         }
     }
 
-    public void handleLogoff() throws IOException {
+    private void handleLogoff() throws IOException {
         server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
 
         // send other online users current user's status
-        String onlineMsg = login + " Has gone offline" + "\n";
+        String onlineMsg = "offline " + login + "\n";
         for (ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
@@ -120,16 +125,14 @@ public class ServerWorker extends Thread {
         return login;
     }
 
-    public static int isEqualLogin(String loginToken) {
+    public static int isEqualPassword(String passwordToken) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("login.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("/home/garrett/JChat/ChatServer/login.csv"));
             String line = "";
-            String unparsedFile = "";
-            Double Price;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
-                for (String item : Ans){
-                    if(Ans[1].equals(loginToken)){
+                for (String item : Ans) {
+                    if (Ans[1].equals(passwordToken)) {
                         return 1;
                     }
                 }
@@ -142,14 +145,16 @@ public class ServerWorker extends Thread {
         return 0;
     }
 
-    public static int isEqualPassword(String passwordToken) {
+    public static int isEqualLogin(String loginToken) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("login.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("/home/garrett/JChat/ChatServer/login.csv"));
             String line = "";
+            String unparsedFile = "";
+            Double Price;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
-                for (String item : Ans){
-                    if(Ans[1].equals(passwordToken)){
+                for (String item : Ans) {
+                    if (Ans[1].equals(loginToken)) {
                         return 1;
                     }
                 }
@@ -184,34 +189,30 @@ public class ServerWorker extends Thread {
                 }
 
                 // send other online users current user's status
-                String onlineMsg = "online: " + login + "\n";
+                String onlineMsg = "online " + login + "\n";
                 for (ServerWorker worker : workerList) {
                     if (!login.equals(worker.getLogin())) {
                         worker.send(onlineMsg);
                     }
                 }
             } else {
-                String msg = "Incorrect Login\n";
+                String msg = "error login\n";
                 outputStream.write(msg.getBytes());
-                System.err.println("Bad login for " + login);
+                System.err.println("Login failed for " + login);
             }
         }
     }
 
-    private void send(String msg) {
+    private void send(String msg) throws IOException {
         if (login != null) {
             try {
                 outputStream.write(msg.getBytes());
+            } catch (SocketException ex) {
+                ex.printStackTrace();
+                handleLogoff();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-    }
-
-    public static int clientLogin(String Login, String Password) {
-        if ((isEqualLogin(Login) == 1) && (isEqualPassword(Password) == 1)) {
-            return 1;
-        }
-        return 0;
     }
 }
