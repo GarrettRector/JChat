@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
-
+import java.util.Properties;
 
 public class Server extends Thread {
     private final int serverPort;
-    private ArrayList<ServerWorker> workerList = new ArrayList<>();
+    private final ArrayList<ServerWorker> workerList = new ArrayList<>();
 
     public Server(int serverPort) {
         this.serverPort = serverPort;
@@ -23,8 +24,8 @@ public class Server extends Thread {
     public void run() {
         try {
             ServerSocket serverSocket = new ServerSocket(serverPort);
-            while (true) {
-                System.out.println("Ready to accept connections");
+            while(true) {
+                System.out.println("Ready to accept client connections");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Accepted connection from " + clientSocket);
                 ServerWorker worker = new ServerWorker(this, clientSocket);
