@@ -1,16 +1,12 @@
 package com.muc;
 
-import ch.qos.logback.classic.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.net.*;
-import java.util.*;
-import java.text.*;
 
 
 public class ServerWorker extends Thread {
@@ -128,7 +124,7 @@ public class ServerWorker extends Thread {
     public static int isEqualPassword(String passwordToken) {
         try {
             BufferedReader br = new BufferedReader(new FileReader("/home/garrett/JChat/ChatServer/login.csv"));
-            String line = "";
+            String line ="";
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
                 for (String item : Ans) {
