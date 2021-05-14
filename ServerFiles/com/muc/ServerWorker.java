@@ -123,7 +123,7 @@ public class ServerWorker extends Thread {
 
     public static int isEqualPassword(String passwordToken) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("/home/garrett/JChat/ChatServer/login.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("login.csv"));
             String line ="";
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
@@ -143,7 +143,7 @@ public class ServerWorker extends Thread {
 
     public static int isEqualLogin(String loginToken) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("/home/garrett/JChat/ChatServer/login.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("login.csv"));
             String line = "";
             String unparsedFile = "";
             Double Price;

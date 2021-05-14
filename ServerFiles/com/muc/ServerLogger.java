@@ -26,7 +26,7 @@ public class ServerLogger<line> {
 
         try(
                 BufferedReader br = new BufferedReader(new FileReader("login.csv"));
-                CSVParser parser = CSVFormat.DEFAULT.withDelimiter(',').withHeader().parse(br);
+                CSVParser parser = CSVFormat.DEFAULT.withDelimiter(',').withHeader().parse(br)
         ) {
             for(CSVRecord record : parser) {
                 String logintoken = record.get("login");
