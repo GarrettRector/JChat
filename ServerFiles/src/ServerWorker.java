@@ -3,6 +3,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 
@@ -125,10 +127,9 @@ public class ServerWorker extends Thread {
 
     public static int loginCheck(String loginToken, String passwordToken) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("/ServerFiles/login.csv"));
+            Path login = Paths.get("ServerFiles/src/login.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
             String line;
-            String unparsedFile = "";
-            Double Price;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
                 for (String item : Ans) {
@@ -138,9 +139,8 @@ public class ServerWorker extends Thread {
                 }
             }
             br.close();
-
         } catch (IOException ex) {
-            System.err.println("Error");
+            System.err.println("Incorrect Login for user " + loginToken);
         }
         return 0;
     }
