@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -24,7 +25,13 @@ public class ServerWorker extends Thread {
     public void run() {
         try {
             handleClientSocket();
-        } catch (IOException | InterruptedException e) {
+        } catch (SocketException e) {
+            try {
+                handleLogoff();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -105,7 +112,6 @@ public class ServerWorker extends Thread {
         server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
 
-        // send other online users current user's status
         String onlineMsg = "offline " + login + "\n";
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
@@ -119,12 +125,33 @@ public class ServerWorker extends Thread {
         return login;
     }
 
+    public static int loginCheck(String loginToken, String passwordToken) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("/ServerFiles/login.csv"));
+            String line;
+            String unparsedFile = "";
+            Double Price;
+            while ((line = br.readLine()) != null) {
+                String[] Ans = line.split(",");
+                for (String item : Ans) {
+                    if (Ans[0].equals(loginToken) && Ans[1].equals(passwordToken)) {
+                        return 1;
+                    }
+                }
+            }
+            br.close();
+
+        } catch (IOException ex) {
+            System.err.println("Error");
+        }
+        return 0;
+    }
+
     private void handleLogin(OutputStream outputStream, String[] tokens) throws IOException {
         if (tokens.length == 3) {
             String login = tokens[1];
             String password = tokens[2];
-
-            if ((login.equals("garrett") && password.equals("garrett")) || (login.equals("jim") && password.equals("jim")) ) {
+            if (loginCheck(login, password) == 1) {
                 String msg = "ok login\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
@@ -132,7 +159,6 @@ public class ServerWorker extends Thread {
 
                 List<ServerWorker> workerList = server.getWorkerList();
 
-                // send current user all other online logins
                 for(ServerWorker worker : workerList) {
                     if (worker.getLogin() != null) {
                         if (!login.equals(worker.getLogin())) {
@@ -142,7 +168,6 @@ public class ServerWorker extends Thread {
                     }
                 }
 
-                // send other online users current user's status
                 String onlineMsg = "online " + login + "\n";
                 for(ServerWorker worker : workerList) {
                     if (!login.equals(worker.getLogin())) {

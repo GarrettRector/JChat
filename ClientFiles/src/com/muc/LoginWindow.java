@@ -11,11 +11,10 @@ public class LoginWindow extends JFrame {
     JButton loginButton = new JButton("Login");
 
     public LoginWindow() {
-        super("Login");
+        super("JChat");
 
         this.client = new ChatClient("localhost", 8818);
         client.connect();
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel p = new JPanel();

@@ -126,13 +126,13 @@ public class ChatClient {
         try {
             try {
                 this.socket = new Socket(serverName, serverPort);
-            } catch(ConnectException ignored) {
+                this.serverOut = socket.getOutputStream();
+                InputStream serverIn = socket.getInputStream();
+                this.bufferedIn = new BufferedReader(new InputStreamReader(serverIn));
+                return true;
+            } catch(ConnectException e) {
+                return false;
             }
-            System.out.println("Client port is " + socket.getLocalPort());
-            this.serverOut = socket.getOutputStream();
-            InputStream serverIn = socket.getInputStream();
-            this.bufferedIn = new BufferedReader(new InputStreamReader(serverIn));
-            return true;
         } catch (IOException e) {
             System.out.println("Server Offline");
         }
