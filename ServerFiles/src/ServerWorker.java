@@ -5,6 +5,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class ServerWorker extends Thread {
     private String login = null;
     private OutputStream outputStream;
     private final HashSet<String> topicSet = new HashSet<>();
+    public int UsrOnl = 0;
 
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
@@ -109,9 +112,9 @@ public class ServerWorker extends Thread {
     }
 
     private void handleLogoff() throws IOException {
+        UsrOnl = UsrOnl - 1;
         server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
-
         String onlineMsg = "offline " + login + "\n";
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
@@ -150,10 +153,13 @@ public class ServerWorker extends Thread {
             String login = tokens[1];
             String password = tokens[2];
             if (loginCheck(login, password) == 1) {
+                UsrOnl = UsrOnl + 1;
                 String msg = "ok login\n";
                 outputStream.write(msg.getBytes());
                 this.login = login;
-                System.out.println("User logged in succesfully: " + login);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now();
+                System.out.println(("User " + login + " Logged in successfully at " + dtf.format(now)) + " From the address " + Server.IPs[UsrOnl]);
 
                 List<ServerWorker> workerList = server.getWorkerList();
 
