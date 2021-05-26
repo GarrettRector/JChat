@@ -1,5 +1,5 @@
 # Release Dates
-* Full Version was released on May 18th
+* Full Server Version was released on May 18th
 * Full GUI Support expected to be complete by June 28th
 
 # JChat
