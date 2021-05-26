@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80281078/119688982-7bc50700-be16-11eb-9c3c-f2696d437cd2.png">
+</p>
+
 # Release Dates
 * Full Server Version was released on May 18th
 * Full GUI Support expected to be complete by June 28th
