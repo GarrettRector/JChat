@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/80281078/119688982-7bc50700-be16-11eb-9c3c-f2696d437cd2.png">
+  <img src="https://user-images.githubusercontent.com/80281078/119688982-7bc50700-be16-11eb-9c3c-f2696d437cd2.png" style="max-width: 150px;">
 </p>
 
 # Release Dates
