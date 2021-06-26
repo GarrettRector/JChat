@@ -1,4 +1,4 @@
 /shelf/
 /workspace.xml
-login.csv
+*.csv
 ServerLogger.java
