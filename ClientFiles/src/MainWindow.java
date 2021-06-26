@@ -4,16 +4,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-public class UserListPane extends JPanel implements UserStatusListener {
+public class MainWindow extends JPanel implements UserStatusListener {
 
+    private final JList<String> userListUI;
+    private final DefaultListModel<String> userListModel;
 
-    private final ChatClient client;
-    private JList<String> userListUI;
-    private DefaultListModel<String> userListModel;
-
-    public UserListPane(ChatClient client) {
-        this.client = client;
-        this.client.addUserStatusListener(this);
+    public MainWindow(ChatClient client) {
+        client.addUserStatusListener(this);
 
         userListModel = new DefaultListModel<>();
         userListUI = new JList<>(userListModel);
@@ -40,7 +37,7 @@ public class UserListPane extends JPanel implements UserStatusListener {
     public static void main(String[] args) {
         ChatClient client = new ChatClient("localhost", 8818);
 
-        UserListPane userListPane = new UserListPane(client);
+        MainWindow userListPane = new MainWindow(client);
         JFrame frame = new JFrame("User List");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 600);
