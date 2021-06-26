@@ -135,7 +135,7 @@ public class ServerWorker extends Thread {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
-                for (String item : Ans) {
+                for (String ignored : Ans) {
                     if (Ans[0].equals(loginToken) && Ans[1].equals(passwordToken)) {
                         return 1;
                     }
@@ -159,7 +159,11 @@ public class ServerWorker extends Thread {
                 this.login = login;
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
-                System.out.println(("User " + login + " Logged in successfully at " + dtf.format(now)) + " From the address " + Server.IPs[UsrOnl]);
+                try {
+                    System.out.println(("User " + login + " Logged in successfully at " + dtf.format(now)) + " From the address " + Server.IPs[UsrOnl-1]);
+                } catch(Exception e) {
+                    System.out.println(("User " + login + " Logged in successfully at " + dtf.format(now)) + " From the address " + Server.IPs[UsrOnl]);
+                }
 
                 List<ServerWorker> workerList = server.getWorkerList();
 
