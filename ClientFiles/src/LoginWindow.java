@@ -17,7 +17,6 @@ public class LoginWindow extends JFrame {
         this.setSize(width/4, height/5);
         int x = width/2;
         int y = height/2;
-        this.setLocation(x, y);
         pack();
         client.connect();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

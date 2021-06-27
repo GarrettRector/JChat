@@ -116,6 +116,9 @@ public class ServerWorker extends Thread {
         server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
         String onlineMsg = "offline " + login + "\n";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        System.err.println("User" + login + "Logged off at" + dtf.format(now));
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
