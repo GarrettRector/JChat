@@ -5,6 +5,10 @@
 # Release Dates
 * Full Server Version was released on May 18th
 * Full GUI Support expected to be complete by July 28th
+* [API](#api) Support expected August 20th
+
+# API
+A JChat A
 
 # JChat
 A simple free messaging client
