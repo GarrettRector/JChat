@@ -1,3 +1,4 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -133,7 +134,7 @@ public class ServerWorker extends Thread {
 
     public static int loginCheck(String loginToken, String passwordToken) {
         try {
-            Path login = Paths.get("ServerFiles/src/login.csv");
+            Path login = Paths.get("ServerFiles/src/credentials/login.csv");
             BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
             String line;
             while ((line = br.readLine()) != null) {
@@ -149,6 +150,70 @@ public class ServerWorker extends Thread {
             System.err.println("Incorrect Login for user " + loginToken);
         }
         return 0;
+    }
+
+    public String getToken(String user) {
+        try {
+            Path login = Paths.get("ServerFiles/src/credentials/login.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] Ans = line.split(",");
+                for (String ignored : Ans) {
+                    if (Ans[0].equals(user)) {
+                        return (Ans[2]);
+                    } else {
+                        return "404";
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException ignored) {
+        }
+        return null;
+    }
+
+    public Boolean isBot(String user) {
+        try {
+            Path login = Paths.get("ServerFiles/src/credentials/login.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] Ans = line.split(",");
+                for (String ignored : Ans) {
+                    if (Ans[0].equals(user)) {
+                        if (Ans[3].equals("yes"))
+                            return true;
+                        } else {
+                        return false;
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException ignored) {
+        }
+        return null;
+    }
+
+    public String getIp(String user) {
+        try {
+            Path login = Paths.get("ServerFiles/src/credentials/ips.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] Ans = line.split(",");
+                for (String ignored : Ans) {
+                    if (Ans[0].equals(user)) {
+                        return Ans[1];
+                    } else {
+                        return null;
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException ignored) {
+        }
+        return null;
     }
 
     private void handleLogin(OutputStream outputStream, String[] tokens) throws IOException {
