@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -134,8 +135,8 @@ public class ServerWorker extends Thread {
 
     public static int loginCheck(String loginToken, String passwordToken) {
         try {
-            Path login = Paths.get("ServerFiles/src/credentials/login.csv");
-            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
+            Path abspath = Paths.get("ServerFiles/src/credentials/login.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(abspath)));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
@@ -154,8 +155,8 @@ public class ServerWorker extends Thread {
 
     public String getToken(String user) {
         try {
-            Path login = Paths.get("ServerFiles/src/credentials/login.csv");
-            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
+            Path abspath = Paths.get("ServerFiles/src/credentials/login.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(abspath)));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
@@ -175,8 +176,8 @@ public class ServerWorker extends Thread {
 
     public Boolean isBot(String user) {
         try {
-            Path login = Paths.get("ServerFiles/src/credentials/login.csv");
-            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
+            Path abspath = Paths.get("ServerFiles/src/credentials/login.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(abspath)));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
@@ -197,8 +198,8 @@ public class ServerWorker extends Thread {
 
     public String getIp(String user) {
         try {
-            Path login = Paths.get("ServerFiles/src/credentials/ips.csv");
-            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(login)));
+            Path abspath = Paths.get("ServerFiles/src/credentials/ips.csv");
+            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(abspath)));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] Ans = line.split(",");
@@ -216,6 +217,31 @@ public class ServerWorker extends Thread {
         return null;
     }
 
+    public void writeIp(String user) {
+        try {
+            String abspath = FileSystems.getDefault().getPath("ServerFiles/src/credentials/ips.csv").normalize().toAbsolutePath().toString();
+            BufferedReader br = new BufferedReader(new FileReader(abspath));
+            String line;
+            FileWriter fw = new FileWriter(abspath,true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            while ((line = br.readLine()) != null) {
+                String[] Ans = line.split(",");
+                for (String ignored : Ans) {
+                    if (Ans[0].equals(user)) {
+                        System.out.println("Not Found");
+                    } else {
+                        bw.write("\n");
+                        bw.write(user);
+                        bw.write(",");
+                        bw.write(Server.IPs[UsrOnl-1]);
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException ignored) {
+        }
+    }
+
     private void handleLogin(OutputStream outputStream, String[] tokens) throws IOException {
         if (tokens.length == 3) {
             String login = tokens[1];
@@ -227,14 +253,9 @@ public class ServerWorker extends Thread {
                 this.login = login;
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
-                try {
-                    System.out.println(("User " + login + " Logged in successfully at " + dtf.format(now)) + " From the address " + Server.IPs[UsrOnl-1]);
-                } catch(Exception e) {
-                    System.out.println(("User " + login + " Logged in successfully at " + dtf.format(now)) + " From the address " + Server.IPs[UsrOnl]);
-                }
-
+                System.out.println(("User " + login + " Logged in successfully at " + dtf.format(now)) + " From the address " + Server.IPs[UsrOnl-1]);
+                writeIp(login);
                 List<ServerWorker> workerList = server.getWorkerList();
-
                 for(ServerWorker worker : workerList) {
                     if (worker.getLogin() != null) {
                         if (!login.equals(worker.getLogin())) {
