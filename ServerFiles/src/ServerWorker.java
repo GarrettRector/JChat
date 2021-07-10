@@ -1,5 +1,5 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -44,10 +45,9 @@ public class ServerWorker extends Thread {
     private void handleClientSocket() throws IOException, InterruptedException {
         InputStream inputStream = clientSocket.getInputStream();
         this.outputStream = clientSocket.getOutputStream();
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
-        while ( (line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             String[] tokens = StringUtils.split(line);
             if (tokens != null && tokens.length > 0) {
                 String cmd = tokens[0];
@@ -63,6 +63,8 @@ public class ServerWorker extends Thread {
                     handleJoin(tokens);
                 } else if ("leave".equalsIgnoreCase(cmd)) {
                     handleLeave(tokens);
+                } else if ("token".equalsIgnoreCase(cmd)) {
+                    handleBot(outputStream, tokens);
                 } else {
                     String msg = "unknown " + cmd + "\n";
                     outputStream.write(msg.getBytes());
@@ -71,6 +73,16 @@ public class ServerWorker extends Thread {
         }
 
         clientSocket.close();
+    }
+
+    private void handleBot(OutputStream outputStream, String[] tokens) throws IOException {
+        String token = getToken(tokens[1]);
+        if (token != null) {
+            outputStream.write(token.getBytes());
+        } else {
+            String cmd = "JCHAT ERROR 404 UNKNOWN BOT \n";
+            outputStream.write(cmd.getBytes());
+        }
     }
 
     private void handleLeave(String[] tokens) {
@@ -153,40 +165,20 @@ public class ServerWorker extends Thread {
         return 0;
     }
 
-    public String getToken(String user) {
+    public String getToken(String token) {
         try {
-            Path abspath = Paths.get("ServerFiles/src/credentials/login.csv");
+            String abspath = FileSystems.getDefault().getPath("ServerFiles/src/credentials/login.csv").normalize().toAbsolutePath().toString();
             BufferedReader br = new BufferedReader(new FileReader(String.valueOf(abspath)));
             String line;
             while ((line = br.readLine()) != null) {
+                System.out.println(br.readLine());
                 String[] Ans = line.split(",");
                 for (String ignored : Ans) {
-                    if (Ans[0].equals(user)) {
-                        return (Ans[2]);
+                    System.out.println(Ans[2]);
+                    if (Ans[2].equals(token)) {
+                        return (Ans[0]);
                     } else {
-                        return "404";
-                    }
-                }
-            }
-            br.close();
-        } catch (IOException ignored) {
-        }
-        return null;
-    }
-
-    public Boolean isBot(String user) {
-        try {
-            Path abspath = Paths.get("ServerFiles/src/credentials/login.csv");
-            BufferedReader br = new BufferedReader(new FileReader(String.valueOf(abspath)));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] Ans = line.split(",");
-                for (String ignored : Ans) {
-                    if (Ans[0].equals(user)) {
-                        if (Ans[3].equals("yes"))
-                            return true;
-                        } else {
-                        return false;
+                        return Ans[2];
                     }
                 }
             }
@@ -198,7 +190,7 @@ public class ServerWorker extends Thread {
 
     public String getIp(String user) {
         try {
-            Path abspath = Paths.get("ServerFiles/src/credentials/ips.csv");
+            String abspath = FileSystems.getDefault().getPath("ServerFiles/src/credentials/ips.csv").normalize().toAbsolutePath().toString();
             BufferedReader br = new BufferedReader(new FileReader(String.valueOf(abspath)));
             String line;
             while ((line = br.readLine()) != null) {
