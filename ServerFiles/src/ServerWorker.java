@@ -77,8 +77,10 @@ public class ServerWorker extends Thread {
 
     private void handleBot(OutputStream outputStream, String[] tokens) throws IOException {
         String token = getToken(tokens[1]);
-        if (token != null) {
-            outputStream.write(token.getBytes());
+        if (!token.equals("404")) {
+            System.out.println(token);
+            String ntoken = token + "\n";
+            outputStream.write(ntoken.getBytes());
         } else {
             String cmd = "JCHAT ERROR 404 UNKNOWN BOT \n";
             outputStream.write(cmd.getBytes());
@@ -132,7 +134,7 @@ public class ServerWorker extends Thread {
         String onlineMsg = "offline " + login + "\n";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        System.err.println("User" + login + "Logged off at" + dtf.format(now));
+        System.err.println("User " + login + " Logged off at " + dtf.format(now));
         for(ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
@@ -174,16 +176,17 @@ public class ServerWorker extends Thread {
                 System.out.println(br.readLine());
                 String[] Ans = line.split(",");
                 for (String ignored : Ans) {
-                    System.out.println(Ans[2]);
                     if (Ans[2].equals(token)) {
+                        System.out.println(Ans[0]);
                         return (Ans[0]);
                     } else {
-                        return Ans[2];
+                        return "404";
                     }
                 }
             }
             br.close();
-        } catch (IOException ignored) {
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         return null;
     }
