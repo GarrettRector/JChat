@@ -4,8 +4,8 @@
 
 # Release Dates
 * Full Server Version was released on May 18th
-* Full GUI Support expected to be complete by July 28th
-* [API](#api) Support expected late august
+* Full GUI Support expected to be complete by September 28th
+* [API](#api) Support expected late September
 
 # API
 A JChat [API](https://github.com/GarrettRector/JChatAPI) is expected to come by late august, and can be used to make bots. It currently only supports the main chatroom, but will support custom hosted ones later
